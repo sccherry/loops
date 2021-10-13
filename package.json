@@ -1,0 +1,23 @@
+{
+  "name": "loops",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Explore four chord loops",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sccherry/loops.git"
+  },
+  "keywords": [
+    "eleventy"
+  ],
+  "author": "Steve Cherry <stevenccherry@gmail.com> (https://stevecherry.net)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sccherry/loops/issues"
+  },
+  "homepage": "https://github.com/sccherry/loops#readme"
+}
