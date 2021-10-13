@@ -2,3 +2,9 @@
 layout: default
 title: Home
 ---
+
+<ol>
+  {% for loop in collections.loop %}
+  <li><a href="{{ loop.url | url }}">{{ loop.data.title }}</a></li>
+  {% endfor %}
+</ol>
