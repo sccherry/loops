@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title or site.name }} | {{ site.name }}</title>
+    <meta name="description" content="{{ site.description }}" />
+  </head>
+  <body>
+    <header role="banner">
+      <a href="{{ '/' | url }}">{{ site.name }}</a>
+    </header>
+
+    <main role="main">
+      {% if title %}
+        <h1>{{ title }}</h1>
+      {% endif %}
+
+      {{ content | safe }}
+    </main>
+
+    <footer role="contentinfo">
+      <p>{{ site.description }}</p>
+    </footer>
+  </body>
+</html>

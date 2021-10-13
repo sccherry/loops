@@ -1,0 +1,4 @@
+{
+  "name": "{{ pkg.name | replace('-', ' ') | title }}",
+  "description": "{{ pkg.description }}"
+}
