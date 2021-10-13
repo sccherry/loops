@@ -1,39 +1,7 @@
 const { BaseN, CartesianProduct } = require('js-combinatorics');
-const { Chord, Note } = require('@tonaljs/tonal');
-
-/**
- * Utilities
- */
-
-// Return all rotations of an array
-function rotate(list) {
-  return list.map((_, i) => [...list.slice(i), ...list.slice(0, i)]);
-}
-
-// Generate an id for a chord progression
-function getLoopId(loop) {
-  // Normalize the first chord root to be 0
-  const root = Note.midi(`${loop[0].tonic}4`) % 12;
-
-  // Tonic is 0-a, quality is 0 for minor, 1 for major
-  return loop
-    .map(({ tonic, quality }) => {
-      return `${((Note.midi(`${tonic}4`) - root) % 12).toString(12)}${
-        quality === 'Major' ? 1 : 0
-      }`;
-    })
-    .join('');
-}
-
-function getLoopData(id) {
-  return {
-    id,
-  };
-}
-
-/**
- * Data
- */
+const { Chord } = require('@tonaljs/tonal');
+const { rotate, wrap } = require('../../lib/utils');
+const Loop = require('../../lib/loop');
 
 // Raw chords are each chord available via modal interchange grouped by scale degree
 const rawChords = [
@@ -57,13 +25,13 @@ for (let pitchSet of pitchSets) {
   const loops = new BaseN(pitchSet, 4);
 
   for (let loop of loops) {
-    const id = getLoopId(loop);
+    const id = Loop.getLoopId(loop);
 
     // Skip progression if id already processed
     if (cachedIds.has(id)) continue;
 
     // Add ids of all rotations to cache
-    const rotations = rotate(loop).map(getLoopId);
+    const rotations = rotate(loop).map(Loop.getLoopId);
 
     rotations.forEach((id) => cachedIds.add(id));
 
@@ -75,19 +43,15 @@ for (let pitchSet of pitchSets) {
     if (uniqueChords.size < 3) continue;
 
     // Skip progression if loop has the same chord multiple times consecutively
-    const consecutive = loop.reduce((match, chord, i, list) => {
+    const consecutive = loop.reduce((match, { tonic }, i, list) => {
       if (match) return match;
-      return chord.tonic === list[(i + 1) % list.length].tonic;
+      return tonic === wrap(list, i + 1).tonic;
     }, false);
 
     if (consecutive) continue;
 
-    // The prime is the lowest id number when converted to an integer
-    const prime = Math.min(...rotations.map((id) => parseInt(id, 12)))
-      .toString(12)
-      .padStart(8, '0');
-
-    allLoops.add(getLoopData(prime));
+    // Add the prime loop the data
+    allLoops.add(Loop.getLoopData(Loop.getPrime(rotations)));
   }
 }
 
