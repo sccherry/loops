@@ -18,7 +18,7 @@ exports.data = {
 
 exports.render = function ({ loop }) {
   return `
-    <dl>
+    <dl class="meta">
       <dt>Prime</dt>
       <dd>${Loop.getChordsFromId(loop.prime).join(' ')}</dd>
       <dt>Negative</dt>
