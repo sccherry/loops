@@ -1,0 +1,44 @@
+/* ---------------------------------- *\
+  #GLOBAL
+\* ---------------------------------- */
+
+ol[role="list"] li::before {
+  content: "";
+}
+
+/* ---------------------------------- *\
+  #UTILITIES
+\* ---------------------------------- */
+
+/**
+ * Flexbox
+ */
+
+.flex-1 {
+  flex: 1;
+}
+
+/* ---------------------------------- *\
+  #BLOCKS
+\* ---------------------------------- */
+
+/**
+ * Grid
+ */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16ch, 1fr));
+}
+
+/**
+ * Navigation
+ */
+
+.nav {
+  display: flex;
+}
+
+.nav-item + .nav-item {
+  margin-left: .75em;
+}
