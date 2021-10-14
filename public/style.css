@@ -30,3 +30,15 @@ ol[role="list"] li::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(16ch, 1fr));
 }
+
+/**
+ * Navigation
+ */
+
+.nav {
+  display: flex;
+}
+
+.nav-item + .nav-item {
+  margin-left: .75em;
+}

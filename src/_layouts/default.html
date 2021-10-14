@@ -15,6 +15,16 @@
         <a href="{{ '/' | url }}">{{ site.name }}</a>
       </header>
 
+      <nav role="navigation">
+        <ul class="nav" role="list">
+          {% for item in collections.all | eleventyNavigation %}
+            <li class="nav-item"{% if item.url == page.url %} aria-current="page"{% endif %}>
+              <a href="{{ item.url | url }}">{{ item.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </nav>
+
       <main class="[ flow ] [ flex-1 ]" role="main">
         {% if title %}
           <h1>{{ title }}</h1>
