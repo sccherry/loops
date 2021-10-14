@@ -1,9 +1,21 @@
 const { BaseN, CartesianProduct } = require('js-combinatorics');
-const { Chord } = require('@tonaljs/tonal');
 const { rotate, wrap } = require('../../lib/utils');
-const Loop = require('../../lib/loop');
+
+// Set the first chord root to be 0
+function normalize(chordIds) {
+  const root = parseInt(chordIds[0].charAt(0), 12);
+
+  return chordIds.map(
+    (id) =>
+      `${((parseInt(id.charAt(0), 12) + 12 - root) % 12).toString(
+        12
+      )}${id.charAt(1)}`
+  );
+}
 
 // Raw chords are each chord available via modal interchange grouped by scale degree
+const notes = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
 const rawChords = [
   ['C', 'Cm'],
   ['Dm', 'Db', 'D'],
@@ -12,7 +24,16 @@ const rawChords = [
   ['G', 'Gm'],
   ['Am', 'Ab'],
   ['Bb', 'Bbm', 'Bm'],
-].map((root) => root.map(Chord.get));
+].map((root) =>
+  root.map((chord) => {
+    // Major is 0, minor is 1
+    const quality = chord.charAt(chord.length - 1) === 'm' ? 1 : 0;
+    const tonic = notes
+      .indexOf(chord.slice(0, chord.length - quality))
+      .toString(12);
+    return `${tonic}${quality}`;
+  })
+);
 
 // Get every unique combination of chords which include only one chord from each scale degree
 const pitchSets = CartesianProduct.from(rawChords);
@@ -25,36 +46,36 @@ for (let pitchSet of pitchSets) {
   const loops = new BaseN(pitchSet, 4);
 
   for (let loop of loops) {
-    const id = Loop.getLoopId(loop);
-
     // Skip progression if id already processed
-    if (cachedIds.has(id)) continue;
+    if (cachedIds.has(normalize(loop).join(''))) continue;
 
     // Add ids of all rotations to cache
-    const rotations = rotate(loop).map(Loop.getLoopId);
-
-    rotations.forEach((id) => cachedIds.add(id));
+    const rotations = rotate(loop).map((rotation) =>
+      normalize(rotation).join('')
+    );
+    rotations.forEach((rotation) => cachedIds.add(rotation));
 
     // Skip progression if fewer than 3 unique chords
-    const uniqueChords = new Set(
-      loop.map(({ tonic, quality }) => `${tonic}${quality}`)
-    );
-
-    if (uniqueChords.size < 3) continue;
+    if (new Set(loop).size < 3) continue;
 
     // Skip progression if loop has the same chord multiple times consecutively
-    const consecutive = loop.reduce((match, { tonic }, i, list) => {
+    const consecutive = loop.reduce((match, chord, i, list) => {
       if (match) return match;
-      return tonic === wrap(list, i + 1).tonic;
+      return chord.charAt(0) === wrap(list, i + 1).charAt(0);
     }, false);
 
     if (consecutive) continue;
 
+    // Prime is the lowest id when converted to an integer
+    const prime = [...rotations].sort(
+      (x, y) => parseInt(x, 12) - parseInt(y, 12)
+    )[0];
+
     // Add the prime loop the data
-    allLoops.add(Loop.getLoopData(Loop.getPrime(rotations)));
+    allLoops.add(prime);
   }
 }
 
 module.exports = function () {
-  return Array.from(allLoops);
+  return Array.from(allLoops).sort((x, y) => parseInt(x, 12) - parseInt(y, 12));
 };

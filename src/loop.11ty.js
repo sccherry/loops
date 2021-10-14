@@ -9,6 +9,7 @@ exports.data = {
     size: 1,
     alias: 'loop',
     addAllPagesToCollections: true,
+    before: (data) => data.map(Loop.getLoopData),
   },
   eleventyComputed: {
     title: ({ loop }) => loop.chords.join(' '),
