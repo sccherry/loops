@@ -6,22 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ title or site.name }} | {{ site.name }}</title>
     <meta name="description" content="{{ site.description }}" />
+    <link rel="stylesheet" href="https://stevecherry.net/normcore/style.css">
+    <link rel="stylesheet" href="{{ '/public/style.css' | url }}">
   </head>
   <body>
-    <header role="banner">
-      <a href="{{ '/' | url }}">{{ site.name }}</a>
-    </header>
+    <div class="container cover flow">
+      <header role="banner">
+        <a href="{{ '/' | url }}">{{ site.name }}</a>
+      </header>
 
-    <main role="main">
-      {% if title %}
-        <h1>{{ title }}</h1>
-      {% endif %}
+      <main class="[ flow ] [ flex-1 ]" role="main">
+        {% if title %}
+          <h1>{{ title }}</h1>
+        {% endif %}
 
-      {{ content | safe }}
-    </main>
+        {{ content | safe }}
+      </main>
 
-    <footer role="contentinfo">
-      <p>{{ site.description }}</p>
-    </footer>
+      <footer role="contentinfo">
+        <p>{{ site.description }}</p>
+      </footer>
+    </div>
   </body>
 </html>
