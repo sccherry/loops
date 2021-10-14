@@ -1,14 +1,14 @@
 /* ---------------------------------- *\
-  #GLOBAL
-\* ---------------------------------- */
-
-ol[role="list"] li::before {
-  content: "";
-}
-
-/* ---------------------------------- *\
   #UTILITIES
 \* ---------------------------------- */
+
+/**
+ * Display
+*/
+
+.flex {
+  display: flex;
+}
 
 /**
  * Flexbox
@@ -16,6 +16,14 @@ ol[role="list"] li::before {
 
 .flex-1 {
   flex: 1;
+}
+
+/**
+ * Spacing
+ */
+
+.mis-1 {
+  margin-left: .75em;
 }
 
 /* ---------------------------------- *\
@@ -43,16 +51,4 @@ ol[role="list"] li::before {
 
 .meta dt {
   font-weight: bold;
-}
-
-/**
- * Navigation
- */
-
-.nav {
-  display: flex;
-}
-
-.nav-item + .nav-item {
-  margin-left: .75em;
 }
