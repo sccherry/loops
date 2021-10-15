@@ -5,8 +5,38 @@ eleventyNavigation:
   title: Home
   order: -1
 ---
+<form class="flex align-center">
+  <div>
+    <label for="loop-type" class="block">Type</label>
+    <select id="loop-type" name="type">
+      <option value="">Any</option>
+
+      {% for type in ['Zero destination', 'Drift', 'Piston', 'Cascade', 'Two destination'] %}
+          <option>{{ type }}</label>
+        </div>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mis-1">
+    <label for="loop-unique-chord-length" class="block">Unique chords</label>
+    <input type="range" id="loop-unique-chord-length" name="numChords" min="3" max="4" value="4">
+    <output data-target="loop-unique-chord-length"></output>
+  </div>
+
+  <div class="mis-1">
+    <label for="loop-chromatic-chord-length" class="block">Modal interchange chords</label>
+    <input type="range" id="loop-chromatic-chord-length" name="numChromaticChords" min="0" max="4" value="0">
+    <output data-target="loop-chromatic-chord-length"></output>
+  </div>
+</form>
+
 <ol class="grid" role="list">
-  {% for loop in collections.loop %}
-    <li><a href="{{ loop.url | url }}">{{ loop.data.title }}</a></li>
+  {% for page in collections.loop %}
+    <li data-id="{{ page.data.loop.id }}">
+      <a href="{{ page.url | url }}">{{ page.data.title }}</a>
+    </li>
   {% endfor %}
 </ol>
+
+<script src="{{ '/public/search.js' | url }}" defer></script>

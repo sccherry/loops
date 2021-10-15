@@ -1,0 +1,9 @@
+---
+permalink: data.json
+---
+[
+  {% for loop in collections.loop %}
+    {{ loop.data.loop | dump | safe }}
+    {% if not loop.last %},{% endif %}
+  {% endfor %}
+]
