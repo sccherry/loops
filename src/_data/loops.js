@@ -38,23 +38,13 @@ const rawChords = [
 // Get every unique combination of chords which include only one chord from each scale degree
 const pitchSets = CartesianProduct.from(rawChords);
 
-const cachedIds = new Set();
-const allLoops = new Set();
+const allLoops = new Map();
 
 for (let pitchSet of pitchSets) {
   // Create all possible 4 chord loops from set of available chords
   const loops = new BaseN(pitchSet, 4);
 
   for (let loop of loops) {
-    // Skip progression if id already processed
-    if (cachedIds.has(normalize(loop).join(''))) continue;
-
-    // Add ids of all rotations to cache
-    const rotations = rotate(loop).map((rotation) =>
-      normalize(rotation).join('')
-    );
-    rotations.forEach((rotation) => cachedIds.add(rotation));
-
     // Skip progression if fewer than 3 unique chords
     if (new Set(loop).size < 3) continue;
 
@@ -67,15 +57,21 @@ for (let pitchSet of pitchSets) {
     if (consecutive) continue;
 
     // Prime is the lowest id when converted to an integer
-    const prime = [...rotations].sort(
-      (x, y) => parseInt(x, 12) - parseInt(y, 12)
-    )[0];
+    const prime = rotate(loop)
+      .map((rotation) => normalize(rotation).join(''))
+      .sort((x, y) => parseInt(x, 12) - parseInt(y, 12))[0];
+
+    if (!allLoops.has(prime)) {
+      allLoops.set(prime, new Set());
+    }
 
     // Add the prime loop the data
-    allLoops.add(prime);
+    allLoops.get(prime).add(loop.join(''));
   }
 }
 
 module.exports = function () {
-  return Array.from(allLoops).sort((x, y) => parseInt(x, 12) - parseInt(y, 12));
+  return Array.from(allLoops)
+    .map(([prime, loops]) => ({ prime, loops: Array.from(loops) }))
+    .sort((x, y) => parseInt(x.prime, 12) - parseInt(y.prime, 12));
 };

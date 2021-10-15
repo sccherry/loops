@@ -3,7 +3,7 @@ const Loop = require('../lib/loop');
 exports.data = {
   layout: 'default',
   tags: ['loop'],
-  permalink: ({ loop }) => `/${loop.id}/index.html`,
+  permalink: ({ loop }) => `/${loop.prime.id}/index.html`,
   pagination: {
     data: 'loops',
     size: 1,
@@ -20,19 +20,16 @@ exports.render = function ({ loop }) {
   return `
     <dl class="meta">
       <dt>Prime</dt>
-      <dd>${Loop.getChordsFromId(loop.prime).join(' ')}</dd>
+      <dd>${loop.prime.chords.join(' ')}</dd>
       <dt>Negative</dt>
-      <dd><a href="${this.url(`/${loop.negative}`)}">${Loop.getChordsFromId(
-    loop.negative
-  ).join(' ')}</a></dd>
+      <dd><a href="${this.url(
+        `/${loop.negative.id}`
+      )}">${loop.negative.chords.join(' ')}</a></dd>
       <dt>Rotations</dt>
       <dd>
         <ul>
           ${loop.rotations
-            .map(
-              (rotation) =>
-                `<li>${Loop.getChordsFromId(rotation).join(' ')}</li>`
-            )
+            .map((rotation) => `<li>${rotation.join(' ')}</li>`)
             .join(' ')}
         </ul>
       </dd>
@@ -40,6 +37,10 @@ exports.render = function ({ loop }) {
       <dd>${loop.type}</dd>
       <dt>Transitions</dt>
       <dd>${loop.transitions.join(', ')}</dd>
+      <dt>Unique chords</dt>
+      <dd>${loop.numChords}</dd>
+      <dt>Chromatic chords</dd>
+      <dd>${loop.numChromaticChords}</dd>
     </dl>
   `;
 };
