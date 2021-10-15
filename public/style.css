@@ -51,4 +51,10 @@
 
 .meta dt {
   font-weight: bold;
+  text-align: right;
+}
+
+.meta ul {
+  list-style: none;
+  padding-left: 0;
 }

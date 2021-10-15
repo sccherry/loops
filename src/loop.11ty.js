@@ -27,7 +27,7 @@ exports.render = function ({ loop }) {
       )}">${loop.negative.chords.join(' ')}</a></dd>
       <dt>Rotations</dt>
       <dd>
-        <ul>
+        <ul role="list">
           ${loop.rotations
             .map((rotation) => `<li>${rotation.join(' ')}</li>`)
             .join(' ')}
