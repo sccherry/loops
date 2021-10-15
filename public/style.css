@@ -1,4 +1,18 @@
 /* ---------------------------------- *\
+  #COMPOSITION
+\* ---------------------------------- */
+
+/**
+ * Row
+ */
+
+.row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------- *\
   #UTILITIES
 \* ---------------------------------- */
 
@@ -10,17 +24,9 @@
   display: block;
 }
 
-.flex {
-  display: flex;
-}
-
 /**
  * Flexbox
  */
-
-.align-center {
-  align-items: center;
-}
 
 .flex-1 {
   flex: 1;

@@ -16,7 +16,7 @@
       </header>
 
       <nav role="navigation">
-        <ul class="flex" role="list">
+        <ul class="row" role="list">
           {% for item in collections.all | eleventyNavigation %}
             <li class="{{ 'mis-1' if loop.index0 > 0 }}"{% if item.url == page.url %} aria-current="page"{% endif %}>
               <a href="{{ item.url | url }}">{{ item.title }}</a>
