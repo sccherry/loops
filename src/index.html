@@ -31,6 +31,11 @@ eleventyNavigation:
   </div>
 </form>
 
+<p aria-live="polite">
+  <span id="results">{{ collections.loop | length }}</span>
+  loops
+</p>
+
 <ol class="grid" role="list">
   {% for page in collections.loop %}
     <li data-id="{{ page.data.loop.id }}">
