@@ -6,6 +6,10 @@
  * Display
 */
 
+.block {
+  display: block;
+}
+
 .flex {
   display: flex;
 }
@@ -13,6 +17,10 @@
 /**
  * Flexbox
  */
+
+.align-center {
+  align-items: center;
+}
 
 .flex-1 {
   flex: 1;
@@ -51,4 +59,10 @@
 
 .meta dt {
   font-weight: bold;
+  text-align: right;
+}
+
+.meta ul {
+  list-style: none;
+  padding-left: 0;
 }
