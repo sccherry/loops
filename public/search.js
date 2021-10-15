@@ -2,6 +2,7 @@
   'use strict';
 
   const form = document.querySelector('form');
+  const results = document.querySelector('#results');
 
   function syncOutput(input) {
     const output = document.querySelector(`[data-target="${input.id}"]`);
@@ -30,15 +31,21 @@
 
         const queryKeys = Object.keys(query);
 
+        let n = 0;
+
         data.forEach((item) => {
           const match = queryKeys.reduce((res, key) => {
             return res && item[key] == query[key];
           }, true);
 
+          if (match) n += 1;
+
           document
             .querySelector(`[data-id="${item.id}"]`)
             .toggleAttribute('hidden', !match);
         });
+
+        results.textContent = n;
       }
 
       form.addEventListener('change', search);
