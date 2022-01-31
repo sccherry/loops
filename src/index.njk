@@ -2,7 +2,7 @@
 layout: default
 title: Home
 ---
-<form class="row">
+<form class="row gap">
   <div>
     <label for="loop-type" class="block">Type</label>
     <select id="loop-type" name="type">
@@ -15,13 +15,13 @@ title: Home
     </select>
   </div>
 
-  <div class="mis-1">
+  <div>
     <label for="loop-unique-chord-length" class="block">Unique chords</label>
     <input type="range" id="loop-unique-chord-length" name="numChords" min="3" max="4" value="4">
     <output data-target="loop-unique-chord-length"></output>
   </div>
 
-  <div class="mis-1">
+  <div>
     <label for="loop-chromatic-chord-length" class="block">Modal interchange chords</label>
     <input type="range" id="loop-chromatic-chord-length" name="numChromaticChords" min="0" max="3" value="0">
     <output data-target="loop-chromatic-chord-length"></output>
