@@ -27,7 +27,6 @@
   "homepage": "https://github.com/sccherry/loops#readme",
   "devDependencies": {
     "@11ty/eleventy": "^0.12.1",
-    "@11ty/eleventy-navigation": "^0.3.2",
     "@tonaljs/tonal": "^4.6.5",
     "js-combinatorics": "^1.5.4",
     "rimraf": "^3.0.2"
