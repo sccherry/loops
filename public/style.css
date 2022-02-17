@@ -10,16 +10,6 @@
   --grid-min: 16ch;
 }
 
-/**
- * Row
- */
-
-.row {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-}
-
 /* ---------------------------------- *\
   #BLOCKS
 \* ---------------------------------- */
