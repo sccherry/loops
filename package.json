@@ -2,13 +2,13 @@
   "name": "loops",
   "private": true,
   "version": "1.0.0",
-  "description": "Explore four chord loops",
+  "description": "Explore four chord loops.",
   "main": "index.js",
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "npm run clean",
     "build:site": "eleventy --config eleventy.config.js",
-    "build": "npm run build:site -- --pathprefix=loops",
+    "build": "npm run build:site -- --pathprefix loops",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run build:site -- --serve"
   },
@@ -19,7 +19,11 @@
   "keywords": [
     "eleventy"
   ],
-  "author": "Steve Cherry <stevenccherry@gmail.com> (https://stevecherry.net)",
+  "author": {
+    "name": "Steve Cherry",
+    "email": "stevenccherry@gmail.com",
+    "url": "https://stevecherry.net"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/sccherry/loops/issues"

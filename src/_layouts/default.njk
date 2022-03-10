@@ -4,15 +4,37 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>{{ title or site.name }} | {{ site.name }}</title>
     <meta name="description" content="{{ site.description }}" />
 
-    <meta name="apple-mobile-web-app-title" content="{{ site.name }}">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="icon" href="{{ '/public/img/favicon.ico' | url }}" size="any" />
+    <link
+      rel="icon"
+      href="{{ '/public/img/icon.svg' | url }}"
+      type="image/svg+xml"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="{{ '/public/img/apple-touch-icon.png' | url }}"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="{{ '/public/img/icon-512.png' | url }}"
+    />
+    <meta name="apple-mobile-web-app-title" content="{{ site.name }}" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="manifest" href="{{ '/site.webmanifest' | url }}" />
+    <meta name="theme-color" content="{{ site.color }}" />
 
-    <link rel="stylesheet" href="https://stevecherry.net/normcore/css/normcore.css">
-    <link rel="stylesheet" href="{{ '/public/style.css' | url }}">
+    <link rel="canonical" href="{{ site.url }}{{ page.url }}" />
+
+    <link
+      rel="stylesheet"
+      href="https://stevecherry.net/normcore/css/normcore.css"
+    />
+    <link rel="stylesheet" href="{{ '/public/style.css' | url }}" media="screen" />
   </head>
   <body>
     <div class="container cover stack">
@@ -21,9 +43,7 @@
       </header>
 
       <main class="[ stack ] [ flex-1 ]" role="main">
-        {% if title %}
-          <h1>{{ title }}</h1>
-        {% endif %}
+        <h1>{{ title or site.name }}</h1>
 
         {{ content | safe }}
       </main>
@@ -32,5 +52,13 @@
         <p>{{ site.description }}</p>
       </footer>
     </div>
+
+    <script defer>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('{{ '/sw.js' | url }}', {
+          scope: '{{ '/' | url }}',
+        });
+      }
+    </script>
   </body>
 </html>

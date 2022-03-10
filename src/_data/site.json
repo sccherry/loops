@@ -1,4 +1,11 @@
 {
   "name": "{{ pkg.name | replace('-', ' ') | title }}",
-  "description": "{{ pkg.description }}"
+  "description": "{{ pkg.description }}",
+  "url": "{{ pkg.author.url }}/{{ pkg.name }}",
+  "author": {
+    "name": "{{ pkg.author.name }}",
+    "email": "{{ pkg.author.email }}",
+    "url": "{{ pkg.author.url }}"
+  },
+  "color": "#000000"
 }
