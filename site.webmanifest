@@ -1,0 +1,22 @@
+{
+  "name": "Loops",
+  "short_name": "Loops",
+  "description": "Explore four chord loops.",
+  "start_url": "/loops/",
+  "scope": "/loops/",
+  "display": "minimal-ui",
+  "icons": [
+    {
+      "src": "/loops/public/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/loops/public/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
