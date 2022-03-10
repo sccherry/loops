@@ -13,32 +13,30 @@ eleventyComputed:
 ---
 
 <dl class="meta">
-  <dt>Prime</dt>
-  <dd>{{ loop.prime.chords | join(' ') }}</dd>
+  <dt class="meta-label">Prime</dt>
+  <dd class="meta-item">{{ loop.prime.chords | join(' ') }}</dd>
 
-  <dt>Negative</dt>
-  <dd>
+  <dt class="meta-label">Negative</dt>
+  <dd class="meta-item">
     <a href="{{ loop.negative.id | url }}">{{ loop.negative.chords | join(' ') }}</a>
   </dd>
 
-  <dt>Rotations</dt>
-  <dd>
-    <ul role="list">
-      {% for rotation in loop.rotations %}
-        <li>{{ rotation | join(' ') }}</li>
-      {% endfor %}
-    </ul>
-  </dd>
+  <dt class="meta-label">Rotations</dt>
+  {% for rotation in loop.rotations %}
+    <dd class="meta-item">
+      {{ rotation | join(' ') }}
+    </dd>
+  {% endfor %}
 
-  <dt>Type</dt>
-  <dd>{{ loop.type }}</dd>
+  <dt class="meta-label">Type</dt>
+  <dd class="meta-item">{{ loop.type }}</dd>
 
-  <dt>Transitions</dt>
-  <dd>{{ loop.transitions | join(', ') }}</dd>
+  <dt class="meta-label">Transitions</dt>
+  <dd class="meta-item">{{ loop.transitions | join(', ') }}</dd>
 
-  <dt>Unique chords</dt>
-  <dd>{{ loop.numChords }}</dd>
+  <dt class="meta-label">Unique chords</dt>
+  <dd class="meta-item">{{ loop.numChords }}</dd>
 
-  <dt>Chromatic chords</dd>
-  <dd>{{ loop.numChromaticChords }}</dd>
+  <dt class="meta-label">Chromatic chords</dd>
+  <dd class="meta-item">{{ loop.numChromaticChords }}</dd>
 </dl>
