@@ -1,0 +1,44 @@
+---
+layout: default
+tags:
+  - loop
+permalink: "{{ loop.prime.id }}/"
+pagination:
+  data: loops
+  size: 1
+  alias: loop
+  addAllPagesToCollections: true
+eleventyComputed:
+  title: "{{ loop.chords | join(' ') }}"
+---
+
+<dl class="meta">
+  <dt>Prime</dt>
+  <dd>{{ loop.prime.chords | join(' ') }}</dd>
+
+  <dt>Negative</dt>
+  <dd>
+    <a href="{{ loop.negative.id | url }}">{{ loop.negative.chords | join(' ') }}</a>
+  </dd>
+
+  <dt>Rotations</dt>
+  <dd>
+    <ul role="list">
+      {% for rotation in loop.rotations %}
+        <li>{{ rotation | join(' ') }}</li>
+      {% endfor %}
+    </ul>
+  </dd>
+
+  <dt>Type</dt>
+  <dd>{{ loop.type }}</dd>
+
+  <dt>Transitions</dt>
+  <dd>{{ loop.transitions | join(', ') }}</dd>
+
+  <dt>Unique chords</dt>
+  <dd>{{ loop.numChords }}</dd>
+
+  <dt>Chromatic chords</dd>
+  <dd>{{ loop.numChromaticChords }}</dd>
+</dl>
