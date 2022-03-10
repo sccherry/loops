@@ -19,12 +19,16 @@
  */
 
 .meta {
+  column-gap: var(--rhythm, 1.5em);
   display: grid;
-  gap: 1em;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content auto;
 }
 
-.meta dt {
-  font-weight: bold;
+.meta-label {
+  font-weight: 700;
   text-align: right;
+}
+
+.meta-item {
+  grid-column-start: 2;
 }
