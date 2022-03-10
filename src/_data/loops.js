@@ -1,4 +1,4 @@
-const { AssetCache } = require('@11ty/eleventy-cache-assets');
+const { AssetCache } = require('@11ty/eleventy-fetch');
 const { BaseN, CartesianProduct } = require('js-combinatorics');
 const { idFromChordName, rotate, wrap } = require('../../lib/utils');
 
