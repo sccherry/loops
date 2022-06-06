@@ -1,6 +1,13 @@
 const { AssetCache } = require('@11ty/eleventy-fetch');
 const { BaseN, CartesianProduct } = require('js-combinatorics');
-const { Chord, Interval, Midi, Note, Progression } = require('@tonaljs/tonal');
+const {
+  Chord,
+  Interval,
+  Midi,
+  Mode,
+  Note,
+  Progression,
+} = require('@tonaljs/tonal');
 const { rotate, wrap } = require('../../lib/utils');
 
 /**
@@ -238,19 +245,39 @@ function getLoopDataFromId(prime) {
 }
 
 function generateUniqueIds() {
-  // Raw chords are each chord available via modal interchange grouped by scale degree
-  const rawChords = [
-    ['C', 'Cm'],
-    ['Dm', 'Db', 'D'],
-    ['Em', 'Eb'],
-    ['F', 'Fm'],
-    ['G', 'Gm'],
-    ['Am', 'Ab'],
-    ['Bb', 'Bbm', 'Bm'],
-  ].map((root) => root.map(idFromChordName));
+  // All the pairs of modes that produce unique combinations of chords
+  const modeSet = [
+    ['lydian'],
+    ['lydian', 'ionian'],
+    ['lydian', 'mixolydian'],
+    ['lydian', 'dorian'],
+    ['lydian', 'aeolian'],
+    ['lydian', 'phrygian'],
+    ['lydian', 'locrian'],
+  ];
+
+  // Convert the list of mode combinations to a set of available chords
+  const chordSet = modeSet.map(([mode, mix]) => {
+    const mixChords = mix ? Mode.triads(mix, 'C') : [];
+
+    return Mode.triads(mode, 'C')
+      .map((chord, i) => {
+        const list = new Set();
+
+        list.add(chord);
+        if (mix) list.add(mixChords[i]);
+        return Array.from(list);
+      })
+      .map((chords) => chords.filter((chord) => !chord.endsWith('dim')))
+      .filter((chords) => chords.length > 0);
+  });
 
   // Get every unique combination of chords which include only one chord from each scale degree
-  const pitchSets = CartesianProduct.from(rawChords);
+  const pitchSets = chordSet.flatMap((chords) => {
+    const rawChords = chords.map((root) => root.map(idFromChordName));
+    const product = CartesianProduct.from(rawChords);
+    return Array.from(product);
+  });
 
   // Cache unique ids
   const cachedIds = new Set();
