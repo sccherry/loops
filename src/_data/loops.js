@@ -244,20 +244,51 @@ function getLoopDataFromId(prime) {
   };
 }
 
-function generateUniqueIds() {
-  // Raw chords are each chord available via modal interchange grouped by scale degree
-  const rawChords = [
-    ['C', 'Cm'],
-    ['Dm', 'Db', 'D'],
-    ['Em', 'Eb'],
-    ['F', 'Fm'],
-    ['G', 'Gm'],
-    ['Am', 'Ab'],
-    ['Bb', 'Bbm', 'Bm'],
-  ].map((root) => root.map(idFromChordName));
+// The chords of each mode.
+const MODES = {
+  ionian: ['C', 'Dm', 'Em', 'F', 'G', 'Am', 'Bdim'],
+  dorian: ['Cm', 'Dm', 'Eb', 'F', 'Gm', 'Adim', 'Bb'],
+  phrygian: ['Cm', 'Db', 'Eb', 'Fm', 'Gdim', 'Ab', 'Bbm'],
+  lydian: ['C', 'D', 'Em', 'F#dim', 'G', 'Am', 'Bm'],
+  mixolydian: ['C', 'Dm', 'Edim', 'F', 'Gm', 'Am', 'Bb'],
+  aeolian: ['Cm', 'Ddim', 'Eb', 'Fm', 'Gm', 'Ab', 'Bb'],
+  locrian: ['Cdim', 'Db', 'Ebm', 'Fm', 'Gb', 'Ab', 'Bbm'],
+};
 
+// All the pairs of modes that produce unique combinations of chords
+const modeSet = [
+  ['lydian'],
+  ['lydian', 'ionian'],
+  ['lydian', 'mixolydian'],
+  ['lydian', 'dorian'],
+  ['lydian', 'aeolian'],
+  ['lydian', 'phrygian'],
+  ['lydian', 'locrian'],
+];
+
+// Convert the list of mode combinations to a set of available chords
+const chordSet = modeSet.map(([mode, mix]) => {
+  const mixChords = mix ? MODES[mix] : [];
+
+  return MODES[mode]
+    .map((chord, i) => {
+      const list = new Set();
+
+      list.add(chord);
+      if (mix) list.add(mixChords[i]);
+      return Array.from(list);
+    })
+    .map((chords) => chords.filter((chord) => !chord.endsWith('dim')))
+    .filter((chords) => chords.length > 0);
+});
+
+function generateUniqueIds() {
   // Get every unique combination of chords which include only one chord from each scale degree
-  const pitchSets = CartesianProduct.from(rawChords);
+  const pitchSets = chordSet.flatMap((chords) => {
+    const rawChords = chords.map((root) => root.map(idFromChordName));
+    const product = CartesianProduct.from(rawChords);
+    return Array.from(product);
+  });
 
   // Cache unique ids
   const cachedIds = new Set();
