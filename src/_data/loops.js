@@ -1,6 +1,7 @@
 const { AssetCache } = require('@11ty/eleventy-fetch');
 const { BaseN, CartesianProduct } = require('js-combinatorics');
 const { Chord, Interval, Midi, Note, Progression } = require('@tonaljs/tonal');
+const { rotate, wrap } = require('../../lib/utils');
 
 /**
  * Globals
@@ -37,16 +38,6 @@ const NOTE_NUMBERS = {
 /**
  * Utils
  */
-
-// Return all rotations of an array
-function rotate(list) {
-  return list.map((_, i) => [...list.slice(i), ...list.slice(0, i)]);
-}
-
-// Get an item from an array by index, wrapping
-function wrap(list, i) {
-  return list[(list.length + i) % list.length];
-}
 
 function idFromChordName(chord) {
   // Major is 0, minor is 1
