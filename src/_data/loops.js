@@ -88,7 +88,9 @@ function getLoopType(transitions) {
   const numDestinations = transitions.filter((t) => t === 'Destination').length;
   const numIslands = transitions.filter((t) => t === 'Island').length;
 
-  if (numDestinations === 0) {
+  if (numIslands === 4) {
+    return 'Archipelago';
+  } else if (numDestinations === 0) {
     return 'Zero destination';
   } else if (numDestinations === 2) {
     return 'Two destination';
