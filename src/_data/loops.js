@@ -88,7 +88,9 @@ function getLoopType(transitions) {
   const numDestinations = transitions.filter((t) => t === 'Destination').length;
   const numIslands = transitions.filter((t) => t === 'Island').length;
 
-  if (numDestinations === 0) {
+  if (numIslands === 4) {
+    return 'Archipelago';
+  } else if (numDestinations === 0) {
     return 'Zero destination';
   } else if (numDestinations === 2) {
     return 'Two destination';
@@ -335,9 +337,9 @@ function generateUniqueIds() {
 module.exports = async function () {
   const asset = new AssetCache('generated_loops');
 
-  if (asset.isCacheValid('1w')) {
-    return asset.getCachedValue();
-  }
+  // if (asset.isCacheValid('1w')) {
+  //   return asset.getCachedValue();
+  // }
 
   const loops = generateUniqueIds()
     .sort((x, y) => parseInt(x, 12) - parseInt(y, 12))
