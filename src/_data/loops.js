@@ -1,85 +1,45 @@
 const { AssetCache } = require('@11ty/eleventy-fetch');
 const { BaseN, CartesianProduct } = require('js-combinatorics');
-const {
-  Chord,
-  Interval,
-  Midi,
-  Mode,
-  Note,
-  Progression,
-} = require('@tonaljs/tonal');
+const { Chord, Interval, Mode, Note, Progression } = require('@tonaljs/tonal');
 const { rotate, wrap } = require('../../lib/utils');
-
-/**
- * Globals
- */
-
-const NOTE_NUMBERS = {
-  'B#': 0,
-  C: 0,
-  'C#': 1,
-  Db: 1,
-  D: 2,
-  Ebb: 2,
-  'D#': 3,
-  Eb: 3,
-  E: 4,
-  Fb: 4,
-  'E#': 5,
-  F: 5,
-  'F#': 6,
-  Gb: 6,
-  'F##': 7,
-  G: 7,
-  Abb: 7,
-  'G#': 8,
-  Ab: 8,
-  A: 9,
-  Bbb: 9,
-  'A#': 10,
-  Bb: 10,
-  B: 11,
-  Cb: 11,
-};
 
 /**
  * Utils
  */
 
-function idFromChordName(chord) {
-  // Major is 0, minor is 1
-  const quality = chord.charAt(chord.length - 1) === 'm' ? 1 : 0;
-  const tonic =
-    NOTE_NUMBERS[chord.slice(0, chord.length - quality)].toString(12);
+function chordToId(symbol) {
+  const { tonic, quality } = Chord.get(symbol);
+  const { chroma } = Note.get(tonic);
+  // C:B -> 0:11, minor adds 12
+  return (chroma + (quality === 'Minor' ? 12 : 0)).toString(24);
+}
 
-  return `${tonic}${quality}`;
+function loopToId(loop) {
+  return loop.map(chordToId).join('');
+}
+
+function idToChord(id) {
+  const n = parseInt(id, 24);
+  const note = Note.pitchClass(Note.fromMidi(n));
+  return `${note}${n > 11 ? 'm' : ''}`;
+}
+
+function idToLoop(id) {
+  return id.split('').map(idToChord);
 }
 
 // Set the first chord root to be 0
-function normalize(chordIds) {
-  const root = parseInt(chordIds[0].charAt(0), 12);
+function normalize(chords) {
+  const root = parseInt(chordToId(chords[0]), 24) % 12;
 
-  return chordIds.map(
-    (id) =>
-      `${((parseInt(id.charAt(0), 12) + 12 - root) % 12).toString(
-        12
-      )}${id.charAt(1)}`
-  );
-}
+  const ids = chords.map((chord) => {
+    const id = chordToId(chord);
+    const num = parseInt(id, 24);
+    const isMinor = num > 11;
+    return (((num + 12 - root) % 12) + (isMinor ? 12 : 0)).toString(24);
+  });
 
-// Generate an id for a chord progression
-function getLoopId(loop) {
-  // Normalize the first chord root to be 0
-  const root = Note.midi(`${loop[0].tonic}4`) % 12;
-
-  // Tonic is 0-a, quality is 0 for major, 1 for minor
-  return loop
-    .map(({ tonic, quality }) => {
-      return `${((Note.midi(`${tonic}4`) - root) % 12).toString(12)}${
-        quality === 'Major' ? 0 : 1
-      }`;
-    })
-    .join('');
+  return ids.join('');
 }
 
 function getLoopType(transitions) {
@@ -116,9 +76,9 @@ function getNegative({ notes }, axis) {
 
 // Prime is the lowest number when converted to an integer
 function getPrime(ids) {
-  return Math.min(...ids.map((id) => parseInt(id, 12)))
-    .toString(12)
-    .padStart(8, '0');
+  return Math.min(...ids.map((id) => parseInt(id, 24)))
+    .toString(24)
+    .padStart(4, '0');
 }
 
 function getTransitions(chords) {
@@ -143,22 +103,6 @@ function getTransitions(chords) {
     });
 }
 
-function getChordsFromId(id) {
-  const data = [];
-
-  for (let i = 0; i < id.length; i += 2) {
-    const chordId = id.slice(i, i + 2);
-    const tonic = Midi.midiToNoteName(
-      parseInt(chordId.charAt(0), 12) + 12 * 5,
-      { pitchClass: true }
-    );
-    const quality = +chordId.charAt(1) ? 'm' : '';
-    data.push(`${tonic}${quality}`);
-  }
-
-  return data;
-}
-
 // The best loop has the lowest id and the fewest chromatic chords
 function getBest(id) {
   const roman = ['I', 'IIm', 'IIIm', 'IV', 'V', 'VIm'];
@@ -176,7 +120,7 @@ function getBest(id) {
     'E',
     'B',
   ];
-  const chords = getChordsFromId(id);
+  const chords = idToLoop(id);
 
   let len = -1;
   let res = [];
@@ -199,16 +143,16 @@ function getBest(id) {
     }
   }
 
-  const ids = res.map((chords) => chords.map(idFromChordName).join(''));
+  const ids = res.map(loopToId);
 
-  ids.sort((x, y) => parseInt(x, 12) - parseInt(y, 12));
+  ids.sort((x, y) => parseInt(x, 24) - parseInt(y, 24));
 
   return { len, id: ids[0] };
 }
 
 function getLoopDataFromId(prime) {
   const { len, id } = getBest(prime);
-  const chords = getChordsFromId(id);
+  const chords = idToLoop(id);
   const chordData = chords.map(Chord.get);
   const numChords = new Set(chords).size;
   const numChromaticChords = numChords - len;
@@ -220,8 +164,10 @@ function getLoopDataFromId(prime) {
   const transitions = getTransitions(chordData);
   const type = getLoopType(transitions);
 
-  const negativeLoop = chordData.map((chord) => getNegative(chord, 'C4'));
-  const negativeId = getPrime(rotate(negativeLoop).map(getLoopId));
+  const negativeLoop = chordData
+    .map((chord) => getNegative(chord, 'C4'))
+    .map(({ tonic, quality }) => `${tonic}${quality === 'Minor' ? 'm' : ''}`);
+  const negativeId = getPrime(rotate(negativeLoop).map(normalize));
 
   return {
     id,
@@ -229,15 +175,13 @@ function getLoopDataFromId(prime) {
     rotations,
     prime: {
       id: prime,
-      chords: getChordsFromId(prime),
+      chords: idToLoop(prime),
     },
     transitions,
     type,
     negative: {
       id: negativeId,
-      chords: negativeLoop.map(
-        ({ tonic, quality }) => `${tonic}${quality === 'Minor' ? 'm' : ''}`
-      ),
+      chords: negativeLoop,
     },
     numChords,
     numChromaticChords,
@@ -274,8 +218,7 @@ function generateUniqueIds() {
 
   // Get every unique combination of chords which include only one chord from each scale degree
   const pitchSets = chordSet.flatMap((chords) => {
-    const rawChords = chords.map((root) => root.map(idFromChordName));
-    const product = CartesianProduct.from(rawChords);
+    const product = CartesianProduct.from(chords);
     return Array.from(product);
   });
 
@@ -289,12 +232,10 @@ function generateUniqueIds() {
 
     for (let loop of loops) {
       // Skip progression if id already processed
-      if (cachedIds.has(normalize(loop).join(''))) continue;
+      if (cachedIds.has(normalize(loop))) continue;
 
       // Add ids of all rotations to cache
-      const rotations = rotate(loop).map((rotation) =>
-        normalize(rotation).join('')
-      );
+      const rotations = rotate(loop).map((rotation) => normalize(rotation));
       rotations.forEach((rotation) => cachedIds.add(rotation));
 
       // Skip progression if fewer than 3 unique chords
@@ -303,14 +244,14 @@ function generateUniqueIds() {
       // Skip progression if loop has the same chord multiple times consecutively
       const consecutive = loop.reduce((match, chord, i, list) => {
         if (match) return match;
-        return chord.charAt(0) === wrap(list, i + 1).charAt(0);
+        return chord === wrap(list, i + 1);
       }, false);
 
       if (consecutive) continue;
 
       // Prime is the lowest id when converted to an integer
       const prime = [...rotations].sort(
-        (x, y) => parseInt(x, 12) - parseInt(y, 12)
+        (x, y) => parseInt(x, 24) - parseInt(y, 24)
       )[0];
 
       // Add the prime loop to the data
@@ -329,8 +270,9 @@ module.exports = async function () {
   }
 
   const loops = generateUniqueIds()
-    .sort((x, y) => parseInt(x, 12) - parseInt(y, 12))
+    .sort((x, y) => parseInt(x, 24) - parseInt(y, 24))
     .map(getLoopDataFromId);
+
   await asset.save(loops, 'json');
 
   return loops;
