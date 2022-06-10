@@ -5,28 +5,40 @@ title: Home
 
 <form class="flex gap">
   <div>
-    <label for="loop-type" class="block">Type</label>
-    <select id="loop-type" name="type">
+    <label for="loop-quality" class="block">Quality</label>
+    <select id="loop-quality" name="quality">
       <option value="">Any</option>
 
-      {% for type in ['Archipelago', 'Zero destination', 'Drift', 'Piston', 'Cascade', 'Two destination'] %}
-          <option>{{ type }}</label>
+      {% for quality in ['Archipelago', 'Drift', 'Piston', 'Two destination', 'Cascade', 'Zero destination'] %}
+          <option>{{ quality }}</label>
         </div>
       {% endfor %}
     </select>
   </div>
 
   <div>
-    <label for="loop-unique-chord-length" class="block">Unique chords</label>
-    <input type="range" id="loop-unique-chord-length" name="numChords" min="3" max="4" value="4">
-    <output data-target="loop-unique-chord-length"></output>
+    <label for="loop-mode" class="block">Parent mode</label>
+    <select id="loop-mode" name="parentMode">
+      <option value="">Any</option>
+
+      {% for mode in ['lydian', 'ionian', 'mixolydian', 'dorian', 'aeolian', 'phrygian', 'locrian'] %}
+          <option>{{ mode }}</label>
+        </div>
+      {% endfor %}
+    </select>
   </div>
 
-  <div>
+  <input-output class="block">
+    <label for="loop-unique-chord-length" class="block">Unique chords</label>
+    <input type="range" id="loop-unique-chord-length" name="numChords" min="3" max="4" value="4" data-target="input-output.input">
+    <output data-target="input-output.output"></output>
+  </input-output>
+
+  <input-output class="block">
     <label for="loop-chromatic-chord-length" class="block">Chromatic chords</label>
-    <input type="range" id="loop-chromatic-chord-length" name="numChromaticChords" min="0" max="2" value="0">
-    <output data-target="loop-chromatic-chord-length"></output>
-  </div>
+    <input type="range" id="loop-chromatic-chord-length" name="numChromaticChords" min="0" max="2" value="0" data-target="input-output.input">
+    <output data-target="input-output.output"></output>
+  </input-output>
 </form>
 
 <p aria-live="polite">
@@ -36,10 +48,14 @@ title: Home
 
 <ol class="gallery" role="list">
   {% for page in collections.loop %}
-    <li data-id="{{ page.data.loop.id }}">
+    <li data-id="{{ page.data.loop.chroma }}">
       <a href="{{ page.url | url }}">{{ page.data.title }}</a>
     </li>
   {% endfor %}
 </ol>
 
+<script
+  src="https://stevecherry.net/normcore/js/normcore.js"
+  defer
+></script>
 <script src="{{ '/public/script.js' | url }}" defer></script>
