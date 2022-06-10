@@ -2,7 +2,7 @@
 layout: default
 tags:
   - loop
-permalink: "{{ loop.prime.id }}/"
+permalink: "{{ loop.chroma | prime }}/"
 pagination:
   data: loops
   size: 1
@@ -13,23 +13,33 @@ eleventyComputed:
 ---
 
 <dl class="meta">
-  <dt class="meta-label">Prime</dt>
-  <dd class="meta-item">{{ loop.prime.chords | join(' ') }}</dd>
+  <dt class="meta-label">Chords</dt>
+  <dd class="meta-item">{{ loop.chords | join(' ') }}</dd>
+
+  <dt class="meta-label">Roman numerals</dt>
+  <dd class="meta-item">{{ loop.roman | join(' ') }}</dd>
+
+  <dt class="meta-label">Nashville numbers</dt>
+  <dd class="meta-item">{{ loop.nashville | join(' ') }}</dd>
+
+  <dt class="meta-label">Parent mode</dt>
+  <dd class="meta-item">{{ loop.parentMode }}</dd>
 
   <dt class="meta-label">Negative</dt>
   <dd class="meta-item">
-    <a href="{{ loop.negative.id | url }}">{{ loop.negative.chords | join(' ') }}</a>
+    {% set negativeUrl = loop.negative.id | prime %}
+    <a href="{{ '/' + negativeUrl | url }}">{{ loop.negative.chords | join(' ') }}</a>
   </dd>
 
-  <dt class="meta-label">Rotations</dt>
-  {% for rotation in loop.rotations %}
+  <dt class="meta-label">Modes</dt>
+  {% for mode in loop.modes %}
     <dd class="meta-item">
-      {{ rotation | join(' ') }}
+      {{ mode | join(' ') }}
     </dd>
   {% endfor %}
 
-  <dt class="meta-label">Type</dt>
-  <dd class="meta-item">{{ loop.type }}</dd>
+  <dt class="meta-label">Quality</dt>
+  <dd class="meta-item">{{ loop.quality }}</dd>
 
   <dt class="meta-label">Transitions</dt>
   <dd class="meta-item">{{ loop.transitions | join(', ') }}</dd>
