@@ -4,16 +4,6 @@
   const form = document.querySelector('form');
   const results = document.querySelector('#results');
 
-  function syncOutput(input) {
-    const output = document.querySelector(`[data-target="${input.id}"]`);
-    output.textContent = input.value;
-  }
-
-  form.querySelectorAll('input[type="range"]').forEach((input) => {
-    syncOutput(input);
-    input.addEventListener('input', (e) => syncOutput(e.target));
-  });
-
   form.addEventListener('submit', (e) => e.preventDefault());
 
   fetch('data.json')
@@ -41,7 +31,7 @@
           if (match) n += 1;
 
           document
-            .querySelector(`[data-id="${item.id}"]`)
+            .querySelector(`[data-id="${item.chroma}"]`)
             .toggleAttribute('hidden', !match);
         });
 
