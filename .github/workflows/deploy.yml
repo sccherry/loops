@@ -27,11 +27,11 @@ jobs:
           node-version: '16'
           cache: 'npm'
 
-      - name: Cache assets
-        uses: actions/cache@v2
-        with:
-          path: .cache
-          key: ${{ runner.os }}-cache-assets
+      # - name: Cache assets
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: .cache
+      #     key: ${{ runner.os }}-cache-assets
 
       - name: Install and build
         run: |

@@ -84,9 +84,9 @@ function generateUniqueIds() {
 module.exports = async function () {
   const asset = new AssetCache('generated_loops');
 
-  if (asset.isCacheValid('1w')) {
-    return asset.getCachedValue();
-  }
+  // if (asset.isCacheValid('1w')) {
+  //   return asset.getCachedValue();
+  // }
 
   const loops = generateUniqueIds()
     .sort((x, y) => parseInt(x, 24) - parseInt(y, 24))
